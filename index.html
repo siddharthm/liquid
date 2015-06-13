@@ -1,0 +1,215 @@
+<html>
+<head>
+	<!-- Vasudhaiva Kutumbakam -->
+	<title> Image resizer </title>
+	<script type="text/javascript" src="js/jquery.js" ></script>
+	<script type="text/javascript" src="seam_carve.js" ></script>
+	<script type="text/javascript" src="bootstrap/bootstrap.min.js" ></script>
+	<link rel="stylesheet" type="text/css" href="bootstrap/bootstrap.css" ></script>
+</head>
+
+<body>	
+	
+	<!-- Image Market -->
+	<div id="step1">
+		<div class="navbar navbar-default navigation-static-top" role="navigation" >
+			<div class="container">
+				<div class="navbar-header">
+					<a class="navbar-brand">Image Marker</a>
+				</div>
+				<div class="navbar-collapse">
+					<ul class="nav navbar-nav">
+						<li class="dropdown">
+							<a href="#" id="step1_colorPicker" class="dropdown-toggle" data-toggle="dropdown"><span id="txt">Green</span><span class="caret"></span></a>
+							<ul class="dropdown-menu" role="menu">
+								<li ><a id="step1_color_green" href="#" style="color:green;">Green</a></li>
+								<li><a id="step1_color_red" href="#" style="color:red;">Red</a></li>
+						
+							</ul>
+						</li>
+						<li><a id="step1_reset" href="#">Reset</a></li>
+						<li class="dropdown">
+						  <a href="#" class="dropdown-toggle" data-toggle="dropdown">Brush Size<span class="caret"></span></a>
+						  <ul class="dropdown-menu" role="menu">
+							<li class="dropdown-header">Brush Size (in px)</li>
+							<li style="text-align:center;" class="noSpin">
+								<input type="number" id="step1_brush_size" min="1" value="10" />
+							</li>
+						  </ul>
+						</li>
+					</ul>
+					<ul class="nav navbar-nav navbar-right">
+						<li class="active"><a id="step1_statusDiv" href="#">Brush Size 10</a></li>
+						<li style="background-color:green;"><a style="color:black;" id="step1_complete" href="#">I am Done</a></li>
+					</ul>
+				</div>
+			</div>
+		</div>
+			<form id="img_form" >
+				<input type="file" id="img_path" />
+			</form>
+		<div>
+			<div class="jumbotron container" id="step1_message_box">
+				<h1>Hello</h1>
+				<p>
+					Welcome to Image resizer. In this step you can mark the image for important and unimportant part which will help our algorithm give better results. You can skip this step and our algorithm will do this automatically for you. Use the green brush to mark important area and red brush for unimportant area. You can increase and decrease the size of brush as well.
+			
+				</p>
+				<a id="step1_next_button" class="btn btn-primary btn-lg" >Begin</a>
+			</div>
+			<div id="step1_image_area" style="display:none;text-align:center;">
+					<h4>Mark area</h4>
+					<canvas id="step1_cvs"></canvas>
+			</div>
+		</div>
+	</div>
+
+	<!-- Image Resizer -->
+	<div id="step2">
+		<div class="navbar navbar-default navigation-static-top" role="navigation" >
+			<div class="container">
+				<div class="navbar-header">
+					<a class="navbar-brand">Intelligent Image Resizer</a>
+				</div>
+				<div class="navbar-collapse">
+					<ul class="nav navbar-nav">
+						<li class="active" style="display:none;" id="aspectL">
+							<a title="Click to unlock Aspect Ratio" href="#">Aspect Locked</a>
+						</li>
+						<li id="aspectUL" >
+							<a title="Click to lock Aspect Ratio" href="#">Lock Aspect</a>
+						</li>
+						<!-- 
+						<li id="cropL">
+							<a title="Click to use crop tool" href="#">Crop Tool</a>
+						</li>
+						<li class="active" style="display:none;" id="cropUL" >
+							<a title="Click to stop crop tool" href="#">Crop Tool</a>
+						</li>
+						-->
+						<li><a id="reset" href="#">Reset</a></li>
+						<li class="dropdown">
+						  <a href="#" id="widthSpin" class="dropdown-toggle" data-toggle="dropdown">Width<span class="caret"></span></a>
+						  <ul class="dropdown-menu" role="menu">
+							<li><a class="increase width"href="#">+ Increase</a></li>
+							<li><a class="decrease width" href="#">- Decrease</a></li>
+							<li class="divider"></li>
+							<li class="dropdown-header">Step Size (in px)</li>
+							<li style="text-align:center;" class="noSpin">
+								<input type="number" id="stepW" min="1" value="1" />
+							</li>
+						  </ul>
+						</li>
+
+						<li class="dropdown">
+						  <a href="#" id="widthSpin" class="dropdown-toggle" data-toggle="dropdown">Height<span class="caret"></span></a>
+						  <ul class="dropdown-menu" role="menu">
+							<li><a class="increase height" href="#">+ Increase</a></li>
+							<li><a class="decrease height" href="#">- Decrease</a></li>
+							<li class="divider"></li>
+							<li class="dropdown-header">Step Size (in px)</li>
+							<li style="text-align:center;" class="noSpin">
+								<input type="number" id="stepH" min="1" value="1" />
+							</li>
+						  </ul>
+						</li>
+
+						<li class="dropdown">
+						  <a href="#" class="dropdown-toggle" data-toggle="dropdown">Resize<span class="caret"></span></a>
+						  <ul class="dropdown-menu" role="menu">
+							<li class="dropdown-header">Width and Height(in px)</li>
+							<li style="text-align:center;" class="noSpin">
+								<input id="resizeWidth" placeholder="Height" type="number" id="Height" min="1" />
+								<input id="resizeHeight" placeholder="Width" type="number" id="width" min="1" />
+							</li>
+							<li><a href="#" id="hwResize">Resize</a></li>
+						  </ul>
+						</li>
+
+					</ul>
+					<ul class="nav navbar-nav navbar-right">
+						<li class="active"><a id="statusDiv" href="#"></a></li>
+						<li class="dropdown">
+							<a href="#" class="dropdown-toggle" data-toggle="dropdown">Download<span class="caret"></span></a>
+							<ul class="dropdown-menu" role="menu">
+								<li><a href="#" id="a_downloadL" >Left Image</a></li>
+								<li><a href="#" id="a_downloadR" >Right Image</a></li>
+							</ul>
+						</li>
+					</ul>
+				</div>
+			</div>
+		</div>
+		<div >
+			<div class="jumbotron container" id="message_box">
+				<h1>Hello</h1>
+				<p>
+					Welcome to Image resizer. You can resize the image by dragging the striped bars present on right and bottom of the image. You can also use the manual control panel above the page. The image on the left is resized through standard techniques, image on the right is resized through content aware resizing techniques.
+			
+				</p>
+				<a id="begin_button" class="btn btn-primary btn-lg" >Begin</a>
+			</div>
+			<div id="image_area" style="display:none;">
+				<div class="col-md-6" id="control_area">
+					<h4>Resized through Standard Method</h4>
+					<canvas id="cvs"></canvas>
+				</div>
+				<div class="col-md-6" id="result_area" >
+					<h4>Content Aware Image Resizing</h4>
+					<p id="img_p">
+					</p>
+				</div>
+			</div>
+		</div>
+	  </div>
+	</div>		</div>
+
+<script type="text/javascript" src="js/resizer.js" ></script>
+<script type="text/javascript" src="js/marker.js" ></script>
+<script>
+// Global variable src which stores src of image
+var src;
+var manEMap;
+$("#step1_next_button").click(function(event){
+	$("#step1_message_box").slideUp(300,function(){
+		$("#step1_image_area").show();
+	});
+});
+
+$("#step1_complete").click(function(event){
+	$("#step1").hide();
+	$("#step2").show();
+});
+
+$("#begin_button").click(function(event){
+	$("#message_box").slideUp(300,function(){
+		$("#image_area").show();
+	});
+	loadResizer(src,manEMap);
+});
+
+$(document).ready(function(){
+	var readURL = function(input){
+		var img;
+		if( input.files && input.files[0] ){
+			var reader=new FileReader();
+			reader.onload = function(e){
+				$("#img_form").remove();
+				src=e.target.result;
+				loadMarker(src);
+				
+			}	
+			reader.readAsDataURL(input.files[0]);
+		}
+	}
+	$("#img_path").change(function(){
+		readURL(this);
+	});
+	
+	// JS for step1 and step2
+	$("#step2").hide();
+
+});
+</script>	
+</body>
+</html>
