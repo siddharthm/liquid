@@ -10,7 +10,7 @@
 
 <body>	
 	
-	<!-- Image Market -->
+	<!-- Image Marker -->
 	<div id="step1">
 		<div class="navbar navbar-default navigation-static-top" role="navigation" >
 			<div class="container">
@@ -45,9 +45,6 @@
 				</div>
 			</div>
 		</div>
-			<form id="img_form" >
-				<input type="file" id="img_path" />
-			</form>
 		<div>
 			<div class="jumbotron container" id="step1_message_box">
 				<h1>Hello</h1>
@@ -55,6 +52,9 @@
 					Welcome to Image resizer. In this step you can mark the image for important and unimportant part which will help our algorithm give better results. You can skip this step and our algorithm will do this automatically for you. Use the green brush to mark important area and red brush for unimportant area. You can increase and decrease the size of brush as well.
 			
 				</p>
+				<form id="img_form" >
+					<input type="file" id="img_path" class="form-control" style="width:auto;height:50px;padding-top:13px;"/>
+				</form>
 				<a id="step1_next_button" class="btn btn-primary btn-lg" >Begin</a>
 			</div>
 			<div id="step1_image_area" style="display:none;text-align:center;">
